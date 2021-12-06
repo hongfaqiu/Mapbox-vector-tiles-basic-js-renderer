@@ -5,7 +5,7 @@ const rewind = require('geojson-rewind');
 const GeoJSONWrapper = require('./geojson_wrapper');
 const vtpbf = require('vt-pbf');
 const supercluster = require('supercluster');
-const geojsonvt = require('geojson-vt');
+const geojsonvt = require('geojson-vt').default;
 
 const VectorTileWorkerSource = require('./vector_tile_worker_source');
 
