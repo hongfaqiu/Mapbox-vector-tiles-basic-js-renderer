@@ -12,16 +12,17 @@ const BasicPainter = require('./painter'),
       stylePreprocess = require('./stylePerprocess');
 
 const DEFAULT_RESOLUTION = 256;
-const OFFSCREEN_CANV_SIZE = 1024; 
+const OFFSCREEN_CANV_SIZE = 1024;
 
 class MapboxBasicRenderer extends Evented {
 
   constructor(options) {
     super();
-    this._canvas = document.createElement('canvas');
+    this._canvas = options.canvas ?? document.createElement('canvas');
+    this._transformRequestFn = options.transformRequest
     this._canvas.style.imageRendering = 'pixelated';
     this._canvas.addEventListener('webglcontextlost', () => console.log("webglcontextlost"), false);
-    this._canvas.addEventListener('webglcontextrestored', () => this._createGlContext(), false); 
+    this._canvas.addEventListener('webglcontextrestored', () => this._createGlContext(), false);
     this._canvas.width = OFFSCREEN_CANV_SIZE;
     this._canvas.height = OFFSCREEN_CANV_SIZE;
     this.transform = {
@@ -37,7 +38,7 @@ class MapboxBasicRenderer extends Evented {
       height: OFFSCREEN_CANV_SIZE,
       pixelsToGLUnits: [2 / OFFSCREEN_CANV_SIZE, -2 / OFFSCREEN_CANV_SIZE],
       tileZoom: tile => tile.tileID.canonical.z,
-      calculatePosMatrix: tileID => tileID.posMatrix 
+      calculatePosMatrix: tileID => tileID.posMatrix
     };
     stylePreprocess(options.style);
     this._initStyle = options.style;
@@ -45,7 +46,7 @@ class MapboxBasicRenderer extends Evented {
     this._style.setEventedParent(this, {style: this._style});
     this._style.on('data', e => (e.dataType === "style") && this._onReady());
     this._createGlContext();
-    this.painter.resize(OFFSCREEN_CANV_SIZE, OFFSCREEN_CANV_SIZE); 
+    this.painter.resize(OFFSCREEN_CANV_SIZE, OFFSCREEN_CANV_SIZE);
     this._pendingRenders = new Map(); // tileSetID => render state
     this._nextRenderId = 0; // each new render state created has a unique renderId in addition to its tileSetID, which isn't unique
     this._configId = 0; // for use with async config changes..see setXYZ methods below
@@ -57,15 +58,19 @@ class MapboxBasicRenderer extends Evented {
   }
 
   _transformRequest(url, resourceType) {
-    return {url: url, headers: {}, credentials: ''};
+    if (this._transformRequestFn) {
+        return this._transformRequestFn(url, resourceType) || {url};
+    }
+
+    return {url};
   }
 
-  _calculatePosMatrix(transX, transY, tileSize) {   
+  _calculatePosMatrix(transX, transY, tileSize) {
     /*
       The returned matrix, M, is designed to be used as:
         X_gl_coords = M * X_mvt_data_coords
       where X_gl_coords are in the range [-1,1]
-      and X_mvt_data_coords are in the range [0,Extent], or rather they are nearly 
+      and X_mvt_data_coords are in the range [0,Extent], or rather they are nearly
       within that range, they actually go outside it by about 10% to let polygons/lines
       span across tile boundaries.
       The translate/scale functions here could probably be ditched in favour of
@@ -102,7 +107,7 @@ class MapboxBasicRenderer extends Evented {
         failIfMajorPerformanceCaveat: false,
         preserveDrawingBuffer: false
     }, require('mapbox-gl-supported').webGLContextAttributes);
-    
+
     this._gl = this._canvas.getContext('webgl', attributes) ||
                this._canvas.getContext('experimental-webgl', attributes);
     if (!this._gl) {
@@ -113,7 +118,7 @@ class MapboxBasicRenderer extends Evented {
   }
 
   /* For the following 3 methods the return value depends on the flag exec:
-      + when exec=true, the function returns a promise that resolves once the 
+      + when exec=true, the function returns a promise that resolves once the
       requested change has taken effect. If the value of the promise is true it
       means that this config change was the most recent change, when false it
       means another config change was requested after this one, and that the other
@@ -143,7 +148,7 @@ class MapboxBasicRenderer extends Evented {
 
   _processConfigQueue(calledByConfigId){
     // only the most recently submitted configId is allowed to actually
-    // trigger the changes, and will resolve to true. All the others will 
+    // trigger the changes, and will resolve to true. All the others will
     // resolve to false.
 
     return this._style.loadedPromise
@@ -167,7 +172,7 @@ class MapboxBasicRenderer extends Evented {
   getLayersVisible(zoom, source){
     // if zoom is provided will filter by min/max zoom as well as by layer visibility
     // and if source (string) is provided only style layers from that source will be returned.
-    let layerStylesheetFromLayer = layer => 
+    let layerStylesheetFromLayer = layer =>
       layer && layer._eventedParent.stylesheet.layers.find(x=>x.id===layer.id);
 
     return Object.keys(this._style._layers)
@@ -175,9 +180,9 @@ class MapboxBasicRenderer extends Evented {
       .filter(lyr => {
         let layerStylesheet = layerStylesheetFromLayer(this._style._layers[lyr]);
         return (
-          !zoom || (layerStylesheet         && 
+          !zoom || (layerStylesheet         &&
            (layerStylesheet.minzoom_ === undefined || zoom >= layerStylesheet.minzoom_) &&
-           (layerStylesheet.maxzoom_ === undefined || zoom <= layerStylesheet.maxzoom_))   
+           (layerStylesheet.maxzoom_ === undefined || zoom <= layerStylesheet.maxzoom_))
         ) && (
           !source || (layerStylesheet       &&
           layerStylesheet.source === source)
@@ -216,15 +221,15 @@ class MapboxBasicRenderer extends Evented {
     return;
   }
 
-  _cancelAllPendingRenders(){ 
+  _cancelAllPendingRenders(){
     this._pendingRenders.forEach(s => this._finishRender(s.tileSetID, s.renderId, "canceled"));
     this._pendingRenders.clear();
     Object.values(this._style.sourceCaches).forEach(s => s.invalidateAllLoadedTiles());
   }
 
-  _finishRender(tileSetID, renderId, err){ 
+  _finishRender(tileSetID, renderId, err){
     // each consumer must call releaseRender at some point, either before this is called or after.
-    // regardless of whether or not there was an error. 
+    // regardless of whether or not there was an error.
 
     let state = this._pendingRenders.get(tileSetID);
     if(!state || state.renderId !== renderId){
@@ -234,7 +239,7 @@ class MapboxBasicRenderer extends Evented {
     while(state.consumers.length){
       state.consumers.shift().next(err);
     }
-    this._pendingRenders.delete(tileSetID);  
+    this._pendingRenders.delete(tileSetID);
   }
 
   _canonicalizeSpec(tilesSpec, drawSpec){
@@ -244,7 +249,7 @@ class MapboxBasicRenderer extends Evented {
 
     let minLeft = tilesSpec.map(s=>s.left).reduce((a,b)=>Math.min(a,b),Infinity);
     let minTop = tilesSpec.map(s=>s.top).reduce((a,b)=>Math.min(a,b), Infinity);
-    
+
     return {
       tilesSpec: tilesSpec.map(s => ({
         source: s.source,
@@ -281,22 +286,22 @@ class MapboxBasicRenderer extends Evented {
 
     if(!state || state.renderId !== renderRef.renderId){
       return; // tile was already rendered
-    } 
-    
+    }
+
     renderRef.consumer.next("canceled");
     let idx = state.consumers.indexOf(renderRef.consumer);
     (idx !== -1) && state.consumers.splice(idx, 1);
 
     // if there are no consumers left then clean-up the render
-    (state.consumers.length === 0) && this._finishRender(state.tileSetID, renderRef.renderId, "fully-canceled");    
+    (state.consumers.length === 0) && this._finishRender(state.tileSetID, renderRef.renderId, "fully-canceled");
   }
 
   renderTiles(ctx, drawSpec, tilesSpec, next){
     // drawSpec has {destLeft,destTop,srcLeft,srcTop,width,height}
     // tilesSpec is an array of: {sourceName,z,x,y,left,top,size}
     // The tilesSpec defines how a selection of source tiles are rendered to an
-    // imaginary canvas, and then drawSpec states what to copy from that imaginary canvas 
-    // to the real ctx. 
+    // imaginary canvas, and then drawSpec states what to copy from that imaginary canvas
+    // to the real ctx.
     // the returned token must be passed to releaseRender at some point
 
 
@@ -304,7 +309,7 @@ class MapboxBasicRenderer extends Evented {
 
     // it is recomended that the caller use .getVisibleSources to limit the list of entries in
     // tilesSpec when appropriate. We don't re-do that filtering work here.
-   
+
     // any requests that have the same tileSetID can be coallesced into a single _pendingRender
     ({drawSpec, tilesSpec} = this._canonicalizeSpec(tilesSpec, drawSpec));
     let tileSetID = this._tileSpecToString(tilesSpec);
@@ -322,7 +327,7 @@ class MapboxBasicRenderer extends Evented {
     let renderId = ++this._nextRenderId;
     state = {
       tileSetID,
-      renderId, 
+      renderId,
       tiles: tilesSpec.map(s => {
         let tileID = new OverscaledTileID(s.z, 0, s.z, s.x, s.y, 0);
         return this._style.sourceCaches[s.source].acquireTile(tileID, s.size); // includes .uses++
@@ -365,7 +370,7 @@ class MapboxBasicRenderer extends Evented {
           this._style.sourceCaches[s.source].currentlyRenderingTiles.push(t);
         })
 
-        // Work out the bounding box containing all src regions 
+        // Work out the bounding box containing all src regions
         let xSrcMin = state.consumers.map(c => c.drawSpec.srcLeft).reduce((a,b)=>Math.min(a,b),Infinity);
         let ySrcMin = state.consumers.map(c => c.drawSpec.srcTop).reduce((a,b)=>Math.min(a,b),Infinity);
         let xSrcMax = state.consumers.map(c => c.drawSpec.srcLeft + c.drawSpec.width).reduce((a,b)=>Math.max(a,b),-Infinity);
@@ -381,7 +386,7 @@ class MapboxBasicRenderer extends Evented {
             let relevantConsumers = state.consumers.filter(c =>
               c.drawSpec.srcLeft + c.drawSpec.width > xx &&
               c.drawSpec.srcLeft < xx + OFFSCREEN_CANV_SIZE &&
-              c.drawSpec.srcTop + c.drawSpec.height > yy && 
+              c.drawSpec.srcTop + c.drawSpec.height > yy &&
               c.drawSpec.srcTop < yy + OFFSCREEN_CANV_SIZE);
             if(relevantConsumers.length === 0){
               continue;
@@ -409,7 +414,7 @@ class MapboxBasicRenderer extends Evented {
             });
           } // yy
         } // xx
-        
+
         while(state.consumers.length){
           state.consumers.shift().next(err);
         }
@@ -429,18 +434,18 @@ class MapboxBasicRenderer extends Evented {
 
     let featuresByRenderLayer = QueryFeatures.rendered(
       this._style.sourceCaches[opts.source],
-      layers, 
-      opts, 
+      layers,
+      opts,
       {}, opts.tileZ, 0);
 
     let featuresBySourceLayer = {};
     Object.keys(featuresByRenderLayer)
-      .forEach(renderLayerName => 
+      .forEach(renderLayerName =>
         featuresByRenderLayer[renderLayerName].map(renderLayerFeatures => {
           let lyr = featuresBySourceLayer[renderLayerFeatures.layer['source-layer']]
                   = (featuresBySourceLayer[renderLayerFeatures.layer['source-layer']] || []);
           lyr.push(renderLayerFeatures._vectorTileFeature.properties)
-        }));    
+        }));
     return featuresBySourceLayer;
   }
 
