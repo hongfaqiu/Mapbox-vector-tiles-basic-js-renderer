@@ -10,6 +10,7 @@ const BasicPainter = require('./painter'),
       Placement = require('../symbol/placement'),
       assert = require('assert'),
       stylePreprocess = require('./stylePerprocess');
+      config = require('../util/config');
 
 const DEFAULT_RESOLUTION = 256;
 const OFFSCREEN_CANV_SIZE = 1024;
@@ -18,6 +19,7 @@ class MapboxBasicRenderer extends Evented {
 
   constructor(options) {
     super();
+    config.ACCESS_TOKEN = options.token;
     this._canvas = options.canvas ?? document.createElement('canvas');
     this._transformRequestFn = options.transformRequest
     this._canvas.style.imageRendering = 'pixelated';
@@ -57,9 +59,10 @@ class MapboxBasicRenderer extends Evented {
     this._style.update(new EvaluationParameters(16));
   }
 
-  _transformRequest(url, resourceType) {
-    if (this._transformRequestFn) {
-        return this._transformRequestFn(url, resourceType) || {url};
+    _transformRequest(url, resourceType) {
+        if (this._transformRequestFn) {
+            const newUrl = this._transformRequestFn(url, resourceType) || {url}
+        return newUrl;
     }
 
     return {url};
