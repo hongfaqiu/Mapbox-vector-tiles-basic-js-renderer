@@ -1,0 +1,64 @@
+Arguments: 
+  D:\nodejs\node.exe D:\nodejs\node_modules\yarn\bin\yarn.js
+
+PATH: 
+  C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files (x86)\NetSarang\Xmanager 7\;C:\Program Files (x86)\NetSarang\Xshell 7\;C:\Program Files (x86)\NetSarang\Xftp 7\;C:\Program Files (x86)\NetSarang\Xlpd 7\;C:\Users\PC\AppData\Local\Yarn\bin;C:\MinGW\bin;C:\Program Files\Redis\;C:\Python27;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;D:\nvm;D:\nodejs;C:\Users\PC\AppData\Local\pnpm;C:\Users\PC\AppData\Local\Programs\Python\Python38\Scripts\;C:\Users\PC\AppData\Local\Programs\Python\Python38\;C:\Users\PC\AppData\Local\Microsoft\WindowsApps;C:\Users\PC\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\PC\AppData\Local\Pandoc\;D:\nvm;D:\nodejs
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  16.14.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: Failed to replace env in config: ${PACKAGE_ACCESS_TOKEN}
+      at D:\nvm\v16.14.0\node_modules\yarn\lib\cli.js:94933:13
+      at String.replace (<anonymous>)
+      at envReplace (D:\nvm\v16.14.0\node_modules\yarn\lib\cli.js:94928:16)
+      at Function.normalizeConfig (D:\nvm\v16.14.0\node_modules\yarn\lib\cli.js:31938:69)
+      at NpmRegistry.<anonymous> (D:\nvm\v16.14.0\node_modules\yarn\lib\cli.js:31968:34)
+      at Generator.next (<anonymous>)
+      at step (D:\nvm\v16.14.0\node_modules\yarn\lib\cli.js:310:30)
+      at D:\nvm\v16.14.0\node_modules\yarn\lib\cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "basic-vector-tile-renderer-demo",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.html",
+    "scripts": {
+      "dev": "webpack-dev-server -d --content-base ./bin --port 9998 --inline",
+      "build": "webpack"
+    },
+    "author": "daniel@landinsight.io",
+    "license": "ISC",
+    "dependencies": {
+      "@mapbox/tilelive": "^6.0.0",
+      "@mapbox/tilelive-s3": "^7.0.1",
+      "babel-core": "^6.26.3",
+      "babel-loader": "^6.2.5",
+      "babel-plugin-transform-class-properties": "^6.23.0",
+      "babel-plugin-transform-flow-comments": "^6.22.0",
+      "babel-polyfill": "^6.16.0",
+      "http-server": "^0.11.1",
+      "imports-loader": "^0.6.5",
+      "raw-loader": "^0.5.1",
+      "webpack": "^3.0.0",
+      "worker-loader": "^1.1.0"
+    },
+    "devDependencies": {
+      "@mapbox/mbtiles": "^0.9.0",
+      "babel-preset-es2015": "^6.24.1",
+      "webpack-dev-server": "^2.3.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
