@@ -348,7 +348,7 @@ class MapboxBasicRenderer extends Evented {
           // this assumes globalCompositeOperation = 'copy', need to do something else otherwise
           state.consumers
             .forEach(c => c.ctx.clearRect(drawSpec.destLeft, drawSpec.destTop, drawSpec.width, drawSpec.height));
-          this._finishRender(tileSetID, renderId, err);
+          this._finishRender(tileSetID, renderId, 'no available tiles');
           return;
         }
 
