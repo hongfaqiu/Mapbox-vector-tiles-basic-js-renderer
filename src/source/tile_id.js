@@ -13,7 +13,7 @@ class CanonicalTileID {
 
     constructor(z: number, x: number, y: number) {
         assert(z >= 0 && z <= 25);
-        assert(x >= 0 && x < Math.pow(2, z));
+        assert(x >= 0 && x < Math.pow(2, z + 1));
         assert(y >= 0 && y < Math.pow(2, z));
         this.z = z;
         this.x = x;
@@ -49,7 +49,7 @@ class UnwrappedTileID {
         this.wrap = wrap;
         this.canonical = canonical;
         this.key = calculateKey(wrap, canonical.z, canonical.x, canonical.y);
-        this.posMatrix = posMatrix
+        this.posMatrix = posMatrix;
     }
 }
 
