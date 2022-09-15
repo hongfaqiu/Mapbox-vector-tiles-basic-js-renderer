@@ -1,10 +1,10 @@
 {
   "name": "mvt-basic-render",
   "description": "A WebGL interactive maps library",
-  "version": "0.2.2",
-  "main": "dist/mapbox-gl.js",
-  "module": "dist/mapbox-gl.js",
-  "style": "dist/mapbox-gl.css",
+  "version": "0.3.2",
+  "main": "dist/mvt-basic-render.js",
+  "module": "dist/mvt-basic-render.js",
+  "style": "dist/mvt-basic-render.css",
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": {
     "type": "git",

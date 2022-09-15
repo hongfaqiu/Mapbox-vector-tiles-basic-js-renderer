@@ -6,14 +6,14 @@ const resolve = (...paths) => path.resolve(__dirname, ...paths);
 module.exports = {
   mode: "production",
   entry: {
-    "mapbox-gl": ["./src"]
+    "mvt-basic-render": ["./src"]
   },
   devtool: "source-map",
   output: {
     path: resolve("dist"),
     filename: "[name].js",
     libraryTarget: "umd",
-    library: "mapbox-gl"
+    library: "mvt-basic-render"
   },
   resolve: {
     extensions: [".js", ".json"]
