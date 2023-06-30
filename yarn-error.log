@@ -1,37 +1,37 @@
 Arguments: 
-  D:\nodejs\node.exe D:\nodejs\node_modules\yarn\bin\yarn.js
+  D:\nodejs\node.exe D:\nodejs\node_modules\yarn\bin\yarn.js build-min-old
 
 PATH: 
-  C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files (x86)\NetSarang\Xmanager 7\;C:\Program Files (x86)\NetSarang\Xshell 7\;C:\Program Files (x86)\NetSarang\Xftp 7\;C:\Program Files (x86)\NetSarang\Xlpd 7\;C:\Users\PC\AppData\Local\Yarn\bin;C:\MinGW\bin;C:\Program Files\Redis\;C:\Python27;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;D:\nvm;D:\nodejs;C:\Program Files (x86)\Yarn\bin\;C:\Users\PC\AppData\Local\pnpm;C:\Users\PC\AppData\Local\Programs\Python\Python38\Scripts\;C:\Users\PC\AppData\Local\Programs\Python\Python38\;C:\Users\PC\AppData\Local\Microsoft\WindowsApps;C:\Users\PC\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\PC\AppData\Local\Pandoc\;D:\nvm;D:\nodejs
+  C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files (x86)\NetSarang\Xmanager 7\;C:\Program Files (x86)\NetSarang\Xshell 7\;C:\Program Files (x86)\NetSarang\Xftp 7\;C:\Program Files (x86)\NetSarang\Xlpd 7\;C:\Users\PC\AppData\Local\Yarn\bin;C:\MinGW\bin;C:\Program Files\Redis\;C:\Python27;D:\nvm;D:\nodejs;C:\Program Files\dotnet\;C:\Program Files\Docker\Docker\resources\bin;C:\Users\PC\.cargo\bin;C:\Users\PC\AppData\Local\pnpm;C:\Users\PC\AppData\Local\Programs\Python\Python38\Scripts\;C:\Users\PC\AppData\Local\Programs\Python\Python38\;C:\Users\PC\AppData\Local\Microsoft\WindowsApps;C:\Users\PC\AppData\Local\Pandoc\;D:\nvm;D:\nodejs;D:\software\Microsoft VS Code\bin
 
 Yarn version: 
   1.22.19
 
 Node version: 
-  16.14.0
+  18.13.0
 
 Platform: 
   win32 x64
 
 Trace: 
   Error: Failed to replace env in config: ${PACKAGE_ACCESS_TOKEN}
-      at D:\nvm\v16.14.0\node_modules\yarn\lib\cli.js:94933:13
+      at D:\nvm\v18.13.0\node_modules\yarn\lib\cli.js:94933:13
       at String.replace (<anonymous>)
-      at envReplace (D:\nvm\v16.14.0\node_modules\yarn\lib\cli.js:94928:16)
-      at Function.normalizeConfig (D:\nvm\v16.14.0\node_modules\yarn\lib\cli.js:31938:69)
-      at NpmRegistry.<anonymous> (D:\nvm\v16.14.0\node_modules\yarn\lib\cli.js:31968:34)
+      at envReplace (D:\nvm\v18.13.0\node_modules\yarn\lib\cli.js:94928:16)
+      at Function.normalizeConfig (D:\nvm\v18.13.0\node_modules\yarn\lib\cli.js:31938:69)
+      at NpmRegistry.<anonymous> (D:\nvm\v18.13.0\node_modules\yarn\lib\cli.js:31968:34)
       at Generator.next (<anonymous>)
-      at step (D:\nvm\v16.14.0\node_modules\yarn\lib\cli.js:310:30)
-      at D:\nvm\v16.14.0\node_modules\yarn\lib\cli.js:321:13
+      at step (D:\nvm\v18.13.0\node_modules\yarn\lib\cli.js:310:30)
+      at D:\nvm\v18.13.0\node_modules\yarn\lib\cli.js:321:13
 
 npm manifest: 
   {
     "name": "mvt-basic-render",
     "description": "A WebGL interactive maps library",
-    "version": "0.1.1",
-    "main": "dist/mapbox-gl.js",
-    "module": "dist/mapbox-gl.js",
-    "style": "dist/mapbox-gl.css",
+    "version": "0.3.2",
+    "main": "dist/mvt-basic-render.js",
+    "module": "dist/mvt-basic-render.js",
+    "style": "dist/mvt-basic-render.css",
     "license": "SEE LICENSE IN LICENSE.txt",
     "repository": {
       "type": "git",

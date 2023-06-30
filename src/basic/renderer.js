@@ -9,7 +9,7 @@ const BasicPainter = require('./painter'),
       EvaluationParameters = require('../style/evaluation_parameters'),
       Placement = require('../symbol/placement'),
       assert = require('assert'),
-      stylePreprocess = require('./stylePerprocess');
+      stylePreprocess = require('./stylePerprocess'),
       config = require('../util/config');
 
 const DEFAULT_RESOLUTION = 256;
