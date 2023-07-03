@@ -28,7 +28,7 @@ npm manifest:
   {
     "name": "mvt-basic-render",
     "description": "A WebGL interactive maps library",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "main": "dist/mvt-basic-render.js",
     "module": "dist/mvt-basic-render.js",
     "style": "dist/mvt-basic-render.css",

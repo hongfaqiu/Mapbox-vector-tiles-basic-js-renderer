@@ -21,7 +21,7 @@ class MapboxBasicRenderer extends Evented {
     super();
     config.ACCESS_TOKEN = options.token;
     this._canvas = options.canvas ?? document.createElement('canvas');
-    this._transformRequestFn = options.transformRequest
+    this._transformRequestFn = options.transformRequest;
     this._canvas.style.imageRendering = 'pixelated';
     this._canvas.addEventListener('webglcontextlost', () => console.log("webglcontextlost"), false);
     this._canvas.addEventListener('webglcontextrestored', () => this._createGlContext(), false);
@@ -59,10 +59,10 @@ class MapboxBasicRenderer extends Evented {
     this._style.update(new EvaluationParameters(16));
   }
 
-    _transformRequest(url, resourceType) {
-        if (this._transformRequestFn) {
-            const newUrl = this._transformRequestFn(url, resourceType) || {url}
-        return newUrl;
+  _transformRequest = (url, resourceType) => {
+    if (this._transformRequestFn) {
+      const newUrl = this._transformRequestFn(url, resourceType) || {url}
+      return newUrl;
     }
 
     return {url};
